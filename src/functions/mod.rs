@@ -4,8 +4,6 @@ use deno_core::Extension;
 use deno_core::JsRuntime;
 use deno_core::RuntimeOptions;
 use std::convert::TryFrom;
-use std::task::Context;
-use tokio::runtime::Handle;
 
 // fn to do an http get
 #[op]
