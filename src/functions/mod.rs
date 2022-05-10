@@ -17,7 +17,7 @@ fn op_http_get(url: String) -> Result<String, deno_core::error::AnyError> {
     Ok(body)
 }
 
-pub fn execute_js() -> Result<()> {
+pub async fn execute_js() -> Result<()> {
     println!("JS code execution started at {}", chrono::Local::now());
 
     // Build a deno_core::Extension providing custom ops
