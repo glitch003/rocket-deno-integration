@@ -15,7 +15,7 @@ pub mod functions;
 curl --request POST http://localhost:8000/
 */
 #[get("/")]
-fn execute_js_function() -> status::Custom<Value> {
+async fn execute_js_function() -> status::Custom<Value> {
     let resp = functions::execute_js();
     match resp {
         Ok(result) => return status::Custom(Status::Ok, json!({"result": true, "error": ""})),
