@@ -4,19 +4,20 @@ use deno_core::Extension;
 use deno_core::JsRuntime;
 use deno_core::RuntimeOptions;
 use std::convert::TryFrom;
+use ureq;
 
 // fn to do an http get
 #[op]
-async fn op_http_get(url: String) -> Result<String, deno_core::error::AnyError> {
+fn op_http_get(url: String) -> Result<String, deno_core::error::AnyError> {
     println!("http_get({})", url);
 
-    let body = reqwest::get(url).await?.text().await?;
+    let body = ureq::get(&url).call()?.into_string()?;
     println!("got body in rust {}", body);
 
     Ok(body)
 }
 
-pub async fn execute_js() -> Result<()> {
+pub fn execute_js() -> Result<()> {
     println!("JS code execution started at {}", chrono::Local::now());
 
     // Build a deno_core::Extension providing custom ops
@@ -43,7 +44,7 @@ pub async fn execute_js() -> Result<()> {
       };
       
       const go = async () => {
-        const resp = await Deno.core.opAsync(
+        const resp = Deno.core.opSync(
           "op_http_get",
           "https://ipfs.litgateway.com/ipfs/QmNiDrDnTiSo4y78qKwaZboq8KfT9Y3CRrnM7pfUmG1EFq"
         );
@@ -57,7 +58,7 @@ pub async fn execute_js() -> Result<()> {
         .execute_script("serverless_function.js", &code_to_run)
         .unwrap();
 
-    js_runtime.run_event_loop(false).await;
+    //   js_runtime.run_event_loop(false).await;
 
     println!("JS code execution finished at {}", chrono::Local::now());
 

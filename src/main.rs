@@ -14,10 +14,10 @@ pub mod functions;
 /*
 curl --request POST http://localhost:8000/
 */
-#[post("/")]
-async fn execute_js_function() -> status::Custom<Value> {
+#[get("/")]
+fn execute_js_function() -> status::Custom<Value> {
     let resp = functions::execute_js();
-    match resp.await {
+    match resp {
         Ok(result) => return status::Custom(Status::Ok, json!({"result": true, "error": ""})),
         Err(err) => {
             return status::Custom(
